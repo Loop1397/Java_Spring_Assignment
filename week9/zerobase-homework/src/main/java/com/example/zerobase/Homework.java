@@ -13,31 +13,46 @@ public class Homework {
     private final ZerobaseCourseRepository repository;
 
     // TODO: 테스트가 통과할 수 있도록 아래 메서드 들을 작성하세요.
-    Optional<ZerobaseCourse> zb = Optional.empty();
-    List<ZerobaseCourse> zerobaseCourse = null;
+    private List<ZerobaseCourse> zerobaseCourseList;
+    private List<ZerobaseCourse> result = new ArrayList<ZerobaseCourse>();
 
     public Optional<ZerobaseCourse> getZerobaseCourse(Long id) {
         // TODO: id 가 일치하며, hidden = false 인 강의만 조회되어야 함
-        zerobaseCourse = repository.findAll();
+        zerobaseCourseList = repository.findAll();
 
-        zerobaseCourse.forEach(z -> {
-            if (z.getId() == id && !z.isHidden()) {
-                zb = Optional.of(z);
-            }
-        });
+        if (zerobaseCourseList.contains(id)) {
+            return !repository.findById(id).isHidden() ? Optional.of(repository.findById(id)) : Optional.empty();
+        }
 
-        return zb;
+        return Optional.empty();
     }
 
     public List<ZerobaseCourse> getZerobaseCourse(String status) {
         // TODO: status가 일치하고, hidden = false 인 강의들이 조회되어야 함
+        zerobaseCourseList = repository.findAll();
 
-        return null;
+        for (ZerobaseCourse zb : zerobaseCourseList) {
+            if (zb.getStatus().equals(status) && !zb.isHidden()) {
+                result.add(zb);
+            }
+        }
+
+        return result;
     }
 
     public List<ZerobaseCourse> getOpenZerobaseCourse(LocalDate targetDt) {
         // TODO: status = "OPEN" 이고, hidden = false 이며,
         // startAt <= targetDt && targetDt <= endAt 인 강의만 조회되어야함.
-        return null;
+        zerobaseCourseList = repository.findAll();
+
+        for (ZerobaseCourse zb : zerobaseCourseList) {
+            if (zb.getStatus().equals("OPEN") && !zb.isHidden()) {
+                if (zb.getStartAt().isBefore(targetDt) && zb.getEndAt().isAfter(targetDt)) {
+                    result.add(zb);
+                }
+            }
+        }
+
+        return result;
     }
 }
