@@ -27,7 +27,6 @@ public class Homework {
         });
 
         return zb;
-        // return Optional.ofNullable(zb.orElse(null));
     }
 
     public List<ZerobaseCourse> getZerobaseCourse(String status) {
